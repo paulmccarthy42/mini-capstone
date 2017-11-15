@@ -1,3 +1,4 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get "/products" => "products#display_products"
+  get "/active_products" => "products#display_active_products"
 end

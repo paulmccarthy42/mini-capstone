@@ -15,11 +15,15 @@ while true
     puts "#{product["id"]}. #{product["name"]} cost: #{product["price"]} (#{(product["stock"] > 0 ? "" : "Not ") + "In Stock"})"
   end
   puts ""
-  choice = gets.chomp.to_i
-  if choice == 0
+  choice = gets.chomp
+  if choice == "restock"
+    puts "restocking"
+    response =Unirest.get("http://localhost:3000/restock")
+    gets.chomp
+  elsif choice.to_i == 0
     break
   else
-    chosen_product = active_products[choice - 1]
+    chosen_product = active_products[choice.to_i - 1]
     pp chosen_product
     puts "Would you like to buy a #{chosen_product["name"]}, y/n?"
     input = gets.chomp

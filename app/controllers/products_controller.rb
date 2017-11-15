@@ -19,4 +19,10 @@ class ProductsController < ApplicationController
     product["stock"] -= 1
     product.save
   end
+
+  def restock
+    product = Product.first
+    product["stock"] = 10
+    product.save
+  end
 end

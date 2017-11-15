@@ -5,7 +5,7 @@ puts "Welcome to the PokeMart!"
 
 gets.chomp
 while true
-  response =Unirest.get("http://localhost:3000/products")
+  response =Unirest.get("http://localhost:3000/v1/products")
   active_products = response.body.sort_by{|x| x["id"]}
   
   system "clear"
@@ -18,7 +18,7 @@ while true
   choice = gets.chomp
   if choice == "restock"
     puts "restocking"
-    response =Unirest.get("http://localhost:3000/restock")
+    response =Unirest.get("http://localhost:3000/v1/restock")
     gets.chomp
   elsif choice.to_i == 0
     break
@@ -32,7 +32,7 @@ while true
       number_of_purchases = gets.chomp.to_i
       number_of_purchases.times do
         if chosen_product["stock"] > 0
-          response = Unirest.get("http://localhost:3000/buy_product/#{chosen_product["id"]}")
+          response = Unirest.get("http://localhost:3000/v1/buy_product/#{chosen_product["id"]}")
         else 
           number_of_purchases -= 1
         end

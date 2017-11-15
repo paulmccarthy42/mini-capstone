@@ -3,6 +3,11 @@ class ProductsController < ApplicationController
     render json: Product.all
   end
 
+  def one_product
+    product = Product.find_by(id: :id)
+    render json: product
+  end
+
   def display_active_products
     products = []
     Product.all.each do |product|
@@ -18,11 +23,14 @@ class ProductsController < ApplicationController
     product = Product.first
     product["stock"] -= 1
     product.save
+    render json: product
   end
 
   def restock
-    product = Product.first
-    product["stock"] = 10
-    product.save
+    products = Product.all
+    products.each do |product|
+      product["stock"] = 10
+      product.save
+    end
   end
 end

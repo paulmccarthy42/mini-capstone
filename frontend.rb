@@ -28,8 +28,16 @@ while true
     puts "Would you like to buy a #{chosen_product["name"]}, y/n?"
     input = gets.chomp
     if input.downcase == 'y'
-      response = Unirest.get("http://localhost:3000/buy_product")
-      puts "bought"
+      puts "How many would you like to buy?"
+      number_of_purchases = gets.chomp.to_i
+      number_of_purchases.times do
+        if chosen_product["stock"] > 0
+          response = Unirest.get("http://localhost:3000/buy_product/#{chosen_product["id"]}")
+        else 
+          number_of_purchases -= 1
+        end
+      end
+      puts "bought #{number_of_purchases} #{chosen_product["name"] + (number_of_purchases != 1 ? "s" : "")}"
     else
       puts "not bought"
     end

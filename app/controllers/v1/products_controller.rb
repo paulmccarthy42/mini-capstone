@@ -1,10 +1,10 @@
-class ProductsController < ApplicationController
+class V1::ProductsController < ApplicationController
   def display_products
     render json: Product.all
   end
 
-  def one_product
-    product = Product.find_by(id: :id)
+  def one_product(id)
+    product = Product.find_by(id: id)
     render json: product
   end
 

@@ -19,15 +19,15 @@ while true
   if choice == 0
     break
   else
-    chosen_product = active_products[choice]
+    chosen_product = active_products[choice - 1]
     pp chosen_product
     puts "Would you like to buy a #{chosen_product["name"]}, y/n?"
     input = gets.chomp
     if input.downcase == 'y'
-      response = Unirest.get()
+      response = Unirest.get("http://localhost:3000/buy_product")
       puts "bought"
     else
-      buts "not bought"
+      puts "not bought"
     end
     gets.chomp
   end

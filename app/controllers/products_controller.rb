@@ -13,4 +13,10 @@ class ProductsController < ApplicationController
 
     render json: products
   end
+
+  def buy_product
+    product = Product.first
+    product["stock"] -= 1
+    product.save
+  end
 end

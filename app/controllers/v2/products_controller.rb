@@ -11,7 +11,8 @@ class V2::ProductsController < ApplicationController
 
   def display_active_products
     products = []
-    Product.all.each do |product|
+    product_pool = Product.all
+    product_pool.sort_by {|x| x["id"]}.each do |product|
       if product["stock"] > 0
         products << product
       end
@@ -34,5 +35,6 @@ class V2::ProductsController < ApplicationController
       product["stock"] = 10
       product.save
     end
+    render json: Product.all
   end
 end

@@ -3,7 +3,8 @@ class V2::ProductsController < ApplicationController
     render json: Product.all
   end
 
-  def one_product(id)
+  def one_product
+    id = params["id"]
     product = Product.find_by(id: id)
     render json: product
   end

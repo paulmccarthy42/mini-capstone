@@ -21,7 +21,8 @@ class V2::ProductsController < ApplicationController
   end
 
   def buy_product
-    product = Product.first
+    id = params["id"]
+    product = Product.find_by(id: id)
     product["stock"] -= 1
     product.save
     render json: product

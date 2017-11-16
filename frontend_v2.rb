@@ -32,7 +32,7 @@ while true
       number_of_purchases = gets.chomp.to_i
       number_of_purchases.times do
         if chosen_product["stock"] > 0
-          response = Unirest.get("http://localhost:3000/v2/buy_product/#{chosen_product["id"]}")
+          response = Unirest.get("http://localhost:3000/v2/buy_product/?id=#{chosen_product["id"]}")
         else 
           number_of_purchases -= 1
         end

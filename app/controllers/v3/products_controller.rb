@@ -32,4 +32,11 @@ class V3::ProductsController < ApplicationController
     product.save
     render json: product
   end
+
+  def destroy
+    id = params["id"]
+    product = Product.find_by(id: id)
+    product.destroy
+    render json: "successfully destroyed"
+  end
 end

@@ -39,19 +39,37 @@ elsif option == 4
   puts "which ID would you like to update?"
   id = gets.chomp
   inputs = {}
-  puts "What is the updated name of the product?"
-  inputs["name"] = gets.chomp
-  puts "What is the updated price of the product?"
-  inputs["price"] = gets.chomp
-  puts "What is the updated image of the product?"
-  inputs["image"] = gets.chomp
-  puts "What is the updated type of the product?"
-  inputs["product_type"] = gets.chomp
-  puts "What is the updated description of the product?"
-  inputs["description"] = gets.chomp
-  puts "What is the updated stock of the product?"
-  inputs["stock"] = gets.chomp
+
+  puts "What would you like to update?"
+  response = Unirest.get("http://localhost:3000/v3/products/1")
+  response.body.each_key do |key| 
+    if !["id", "created_at", "updated_at"].include?(key) 
+      puts key.capitalize
+    end
+  end
+  updated_key = gets.chomp
+  puts "What would you like to update #{updated_key} to?"
+  updated_value = gets.chomp
+  params = {updated_key => updated_value}
+
+
+
+
+  # puts "What is the updated name of the product?"
+  # inputs["name"] = gets.chomp
+  # puts "What is the updated price of the product?"
+  # inputs["price"] = gets.chomp
+  # puts "What is the updated image of the product?"
+  # inputs["image"] = gets.chomp
+  # puts "What is the updated type of the product?"
+  # inputs["product_type"] = gets.chomp
+  # puts "What is the updated description of the product?"
+  # inputs["description"] = gets.chomp
+  # puts "What is the updated stock of the product?"
+  # inputs["stock"] = gets.chomp
+
+
   response = Unirest.patch("http://localhost:3000/v3/products/#{id}", 
-    parameters: inputs)
-  pp response.body
+     parameters: inputs)
+  pp response.code
 end

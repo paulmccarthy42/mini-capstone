@@ -8,6 +8,7 @@ puts "[1] Display all products"
 puts "[2] Add a product"
 puts "[3] Display a product"
 puts "[4] Update a product"
+puts "[5] Delete a product"
 option = gets.chomp.to_i
 
 if option == 1
@@ -41,17 +42,16 @@ elsif option == 4
   inputs = {}
 
   puts "What would you like to update?"
-  response = Unirest.get("http://localhost:3000/v3/products/1")
-  response.body.each_key do |key| 
+  response = Unirest.get("http://localhost:3000/v3/products/#{id}")
+  response.body.each do |key, value| 
     if !["id", "created_at", "updated_at"].include?(key) 
-      puts key.capitalize
+      puts "#{key.capitalize}: #{value}"
     end
   end
   updated_key = gets.chomp
   puts "What would you like to update #{updated_key} to?"
   updated_value = gets.chomp
   params = {updated_key => updated_value}
-
 
 
 
@@ -70,6 +70,11 @@ elsif option == 4
 
 
   response = Unirest.patch("http://localhost:3000/v3/products/#{id}", 
-     parameters: inputs)
-  pp response.code
+     parameters: params)
+  pp response.body
+elsif option == 5
+  puts "which ID would you like to destroy?"
+  id = gets.chomp
+  response = Unirest.delete("http://localhost:3000/v3/products/#{id}")
+  puts response.body
 end

@@ -19,4 +19,17 @@ class V3::ProductsController < ApplicationController
     product = Product.find_by(id: id)
     render json: product
   end
+
+  def update
+    id = params["id"]
+    product = Product.find_by(id: id)
+    product.name = params["name"]
+    product.price = params["price"]
+    product.image = params["image"]
+    product.product_type = params["product_type"]
+    product.description = params["description"]
+    product.stock = params["stock"]
+    product.save
+    render json: product
+  end
 end

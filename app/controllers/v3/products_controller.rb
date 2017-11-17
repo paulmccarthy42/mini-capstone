@@ -23,12 +23,12 @@ class V3::ProductsController < ApplicationController
   def update
     id = params["id"]
     product = Product.find_by(id: id)
-    product.name = params["name"]
-    product.price = params["price"]
-    product.image = params["image"]
-    product.product_type = params["product_type"]
-    product.description = params["description"]
-    product.stock = params["stock"]
+    product.name = params["name"] || product.name
+    product.price = params["price"] || product.price
+    product.image = params["image"] || product.image
+    product.product_type = params["product_type"] || product.product_type
+    product.description = params["description"] || product.description
+    product.stock = params["stock"] || product.stock
     product.save
     render json: product
   end

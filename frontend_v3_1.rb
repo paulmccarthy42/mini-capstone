@@ -1,6 +1,18 @@
 require "unirest"
 require "pp"
 
+def restock()
+  response = Unirest.get("http://localhost:3000/v3/products")
+  products = response.body
+  products.each do |x|
+    response = Unirest.patch("http://localhost:3000/v3/products/#{x["id"]}", 
+     parameters: {"stock" => 10})
+  end
+  response = Unirest.get("http://localhost:3000/v3/products")
+  products = response.body
+  pp products.sort_by {|x| x["id"]}
+end
+
 system "clear"
 puts "Welcome to the pokemart"
 puts "What would you like to do?"
@@ -9,6 +21,8 @@ puts "[2] Add a product"
 puts "[3] Display a product"
 puts "[4] Update a product"
 puts "[5] Delete a product"
+puts "[6] Restock"
+puts "[7] Quit"
 option = gets.chomp.to_i
 
 if option == 1
@@ -61,4 +75,6 @@ elsif option == 5
   id = gets.chomp
   response = Unirest.delete("http://localhost:3000/v3/products/#{id}")
   puts response.body
+elsif option == 6
+  restock()
 end

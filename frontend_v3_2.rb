@@ -1,16 +1,18 @@
 require "unirest"
 require "pp"
 
-# def display_product(product)
-#   puts "#{product["name"]}"
-# end
-
-# response = Unirest.get("http://localhost:3000/v3/products")
-# products = response.body
-# products.each { |x| display_product(x)}
-
 def base_url 
   "http://localhost:3000/v3"
+end
+
+def menu_options
+  [method(:display),
+  method(:create),
+  method(:read),
+  method(:update),
+  method(:destroy),
+  method(:restock)
+  ]
 end
 
 def display
@@ -85,7 +87,7 @@ def restock
   pp products.sort_by {|x| x["id"]}
 end
 
-def run(menu_options)
+def run
   while true
     system "clear"
     puts "Welcome to the pokemart"
@@ -107,12 +109,4 @@ def run(menu_options)
   end
 end
 
-routing = [method(:display),
-  method(:create),
-  method(:read),
-  method(:update),
-  method(:destroy),
-  method(:restock)
-]
-
-run(routing)
+run

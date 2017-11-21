@@ -9,8 +9,14 @@ require "pp"
 # products = response.body
 # products.each { |x| display_product(x)}
 
+def base_url 
+  "http://localhost:3000/v3"
+end
+
 def display
-  puts "Display"
+  response = Unirest.get("#{base_url}/products")
+  products = response.body
+  products.each {|x| pp x}
 end
 
 def create
@@ -26,28 +32,23 @@ def update
 end
 
 def destroy
-  puts "Destroy"
+  puts "which ID would you like to destroy?"
+  id = gets.chomp
+  response = Unirest.delete("http://localhost:3000/v3/products/#{id}")
+  puts response.code == 200 ? "Success!" : "No luck"
 end
 
 def restock
-  response = Unirest.get("http://localhost:3000/v3/products")
+  response = Unirest.get("#{base_url}/products")
   products = response.body
   products.each do |x|
-    response = Unirest.patch("http://localhost:3000/v3/products/#{x["id"]}", 
+    response = Unirest.patch("#{base_url}/products/#{x["id"]}", 
      parameters: {"stock" => 10})
   end
-  response = Unirest.get("http://localhost:3000/v3/products")
+  response = Unirest.get("#{base_url}/products")
   products = response.body
   pp products.sort_by {|x| x["id"]}
 end
-
-routing = [method(:display),
-  method(:create),
-  method(:read),
-  method(:update),
-  method(:destroy),
-  method(:restock)
-]
 
 def run(menu_options)
   while true
@@ -70,5 +71,13 @@ def run(menu_options)
     gets.chomp
   end
 end
+
+routing = [method(:display),
+  method(:create),
+  method(:read),
+  method(:update),
+  method(:destroy),
+  method(:restock)
+]
 
 run(routing)

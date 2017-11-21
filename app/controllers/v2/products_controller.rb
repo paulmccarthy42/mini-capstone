@@ -6,7 +6,7 @@ class V2::ProductsController < ApplicationController
   def one_product
     id = params["id"]
     product = Product.find_by(id: id)
-    render json: product
+    render json: product.as_json
   end
 
   def display_active_products
@@ -18,7 +18,7 @@ class V2::ProductsController < ApplicationController
       end
     end
 
-    render json: products
+    render json: products.as_json
   end
 
   def buy_product
@@ -26,7 +26,7 @@ class V2::ProductsController < ApplicationController
     product = Product.find_by(id: id)
     product["stock"] -= 1
     product.save
-    render json: product
+    render json: product.as_json
   end
 
   def restock
@@ -35,6 +35,6 @@ class V2::ProductsController < ApplicationController
       product["stock"] = 10
       product.save
     end
-    render json: Product.all
+    render json: Product.all.as_json
   end
 end

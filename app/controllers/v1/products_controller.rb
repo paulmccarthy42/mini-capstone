@@ -1,11 +1,11 @@
 class V1::ProductsController < ApplicationController
   def display_products
-    render json: Product.all
+    render json: Product.all.as_json
   end
 
   def one_product
     product = Product.first
-    render json: product
+    render json: product.as_json
   end
 
   def display_active_products
@@ -16,14 +16,14 @@ class V1::ProductsController < ApplicationController
       end
     end
 
-    render json: products
+    render json: products.as_json
   end
 
   def buy_product
     product = Product.first
     product["stock"] -= 1
     product.save
-    render json: product
+    render json: product.as_json
   end
 
   def restock

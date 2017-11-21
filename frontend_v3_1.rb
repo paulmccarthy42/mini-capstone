@@ -34,7 +34,7 @@ elsif option == 2
   puts "What is the name of the product?"
   inputs["name"] = gets.chomp
   puts "What is the price of the product?"
-  inputs["price"] = gets.chomp
+  inputs["price"] = gets.chomp.to_i
   puts "What is the image of the product?"
   inputs["image"] = gets.chomp
   puts "What is the type of the product?"
@@ -42,7 +42,7 @@ elsif option == 2
   puts "What is the description of the product?"
   inputs["description"] = gets.chomp
   puts "What is the stock of the product?"
-  inputs["stock"] = gets.chomp
+  inputs["stock"] = gets.chomp.to_i
   response = Unirest.post("http://localhost:3000/v3/products", parameters: inputs)
   pp response.body
 elsif option == 3

@@ -15,7 +15,7 @@ class Product < ApplicationRecord
     {
       id: id,
       name: name,
-      price: price.to_i,
+      price: price,
       tax: tax,
       total: total,
       image: image,

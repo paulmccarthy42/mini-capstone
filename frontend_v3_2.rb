@@ -33,12 +33,15 @@ def create
   inputs["description"] = gets.chomp
   puts "What is the stock of the product?"
   inputs["stock"] = gets.chomp.to_i
-  response = Unirest.post("http://localhost:3000/v3/products", parameters: inputs)
+  response = Unirest.post("#{base_url}/products", parameters: inputs)
   pp response.body
 end
 
 def read
-  puts "Read"
+  puts "Which ID would you like to see?"
+  id = gets.chomp
+  response = Unirest.get("#{base_url}/products/#{id}")
+  pp response.body
 end
 
 def update
@@ -48,7 +51,7 @@ end
 def destroy
   puts "which ID would you like to destroy?"
   id = gets.chomp
-  response = Unirest.delete("http://localhost:3000/v3/products/#{id}")
+  response = Unirest.delete("#{base_url}/v3/products/#{id}")
   puts response.code == 200 ? "Success!" : "No luck"
 end
 

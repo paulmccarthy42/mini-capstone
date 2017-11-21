@@ -1,6 +1,8 @@
 require "unirest"
 require "pp"
 
+
+#Basic variables
 def base_url 
   "http://localhost:3000/v3"
 end
@@ -15,6 +17,7 @@ def menu_options
   ]
 end
 
+#CRUD Methods +
 def display
   response = Unirest.get("#{base_url}/products")
   products = response.body
@@ -87,6 +90,7 @@ def restock
   pp products.sort_by {|x| x["id"]}
 end
 
+#Core engine for the app
 def run
   while true
     system "clear"
@@ -109,4 +113,5 @@ def run
   end
 end
 
+#tester
 run

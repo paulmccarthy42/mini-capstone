@@ -45,7 +45,25 @@ def read
 end
 
 def update
-  puts "Update"
+  puts "which ID would you like to update?"
+  id = gets.chomp
+  inputs = {}
+
+  puts "What would you like to update?"
+  response = Unirest.get("#{base_url}/products/#{id}")
+  response.body.each do |key, value| 
+    if !["id", "created_at", "updated_at"].include?(key) 
+      puts "#{key.capitalize}: #{value}"
+    end
+  end
+  updated_key = gets.chomp.downcase
+  puts "What would you like to update #{updated_key} to?"
+  updated_value = gets.chomp
+  params = {updated_key => updated_value}
+
+  response = Unirest.patch("#{base_url}/products/#{id}", 
+     parameters: params)
+  pp response.body
 end
 
 def destroy

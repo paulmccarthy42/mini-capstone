@@ -5,6 +5,8 @@ class Product < ApplicationRecord
   validates :name, :price, presence: true
   validates :name, uniqueness: true
   validates :description, length: {in: 5..500}
+  validates :price, numericality: {only_integer: true}
+  validates :price, numericality: {greater_than: 0}
 
   def is_discounted?
     price.to_i < 300 ? true : false

@@ -10,8 +10,11 @@ class V3::ProductsController < ApplicationController
       product_type: params["product_type"],
       description: params["description"],
       stock: params["stock"])
-    product.save
-    render json: product.as_json
+    if product.save
+      render json: product.as_json
+    else
+      render json: {code: :bad_request, errors: product.errors.full_messages}
+    end
   end
 
   def show
@@ -29,8 +32,11 @@ class V3::ProductsController < ApplicationController
     product.product_type = params["product_type"] || product.product_type
     product.description = params["description"] || product.description
     product.stock = params["stock"] || product.stock
-    product.save
-    render json: product.as_json
+    if product.save
+      render json: product.as_json
+    else
+      render json: {code: :bad_request, errors: product.errors.full_messages}
+    end
   end
 
   def destroy

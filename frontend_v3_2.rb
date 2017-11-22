@@ -17,6 +17,8 @@ def menu_options
   ]
 end
 
+
+
 #CRUD Methods +
 def display
   response = Unirest.get("#{base_url}/products")
@@ -96,12 +98,9 @@ def run
     system "clear"
     puts "Welcome to the pokemart"
     puts "What would you like to do?"
-    puts "[1] Display all products"
-    puts "[2] Create a product"
-    puts "[3] Read a product"
-    puts "[4] Update a product"
-    puts "[5] Delete a product"
-    puts "[6] Restock"
+    menu_options.each do |choice|
+      puts "[#{menu_options.index(choice) + 1}] #{choice.name.capitalize}"
+    end
     puts "Input anything else to quit"
     option = gets.chomp.to_i
     if option > menu_options.length || option == 0

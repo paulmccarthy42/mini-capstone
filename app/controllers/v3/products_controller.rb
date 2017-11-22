@@ -13,7 +13,7 @@ class V3::ProductsController < ApplicationController
     if product.save
       render json: product.as_json
     else
-      render json: {code: :bad_request, errors: product.errors.full_messages}
+      render json: {errors: product.errors.full_messages}, status: :bad_request
     end
   end
 
@@ -35,7 +35,7 @@ class V3::ProductsController < ApplicationController
     if product.save
       render json: product.as_json
     else
-      render json: {code: :bad_request, errors: product.errors.full_messages}
+      render json: {errors: product.errors.full_messages}, status: :bad_request
     end
   end
 

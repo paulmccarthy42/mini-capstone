@@ -18,6 +18,7 @@ def menu_options
   ]
 end
 
+#Special functions
 def search
   print "What would you like to see in the name? "
   search_choice = gets.chomp

@@ -1,6 +1,10 @@
 class V3::ProductsController < ApplicationController
   def index
-    render json: Product.all.as_json
+    product = Product.all.order(:id)
+    if params[:search]
+      product = product.where("name ilike ?", "%#{params[:search]}%")
+    end
+    render json: product.as_json
   end
 
   def create

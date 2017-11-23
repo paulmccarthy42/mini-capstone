@@ -1,6 +1,4 @@
 require "unirest"
-require "pp"
-
 
 #Basic variables
 def base_url 
@@ -8,13 +6,13 @@ def base_url
 end
 
 def menu_options
-  [method(:display),
-  method(:create),
-  method(:read),
-  method(:update),
-  method(:destroy),
-  method(:restock),
-  method(:search)
+  [method(:display_all_products),
+  method(:create_a_product),
+  method(:read_a_product),
+  method(:update_a_product),
+  method(:destroy_a_product),
+  method(:restock_all_products),
+  method(:search_for_a_product)
   ]
 end
 
@@ -28,8 +26,14 @@ Cost: #{product["price"]}
 """
 end
 
+def humanized_method_name(method)
+  name = "#{method.name}"
+  name.split("_").join(" ").capitalize
+end
+
+
 #Special functions
-def search
+def search_for_a_product
   print "What would you like to see in the name? "
   search_choice = gets.chomp
   response = Unirest.get("#{base_url}/products", parameters: {search: search_choice})
@@ -37,9 +41,8 @@ def search
   products.each {|x| puts humanized_product(x)}
 end
 
-
 #CRUD Methods +
-def display
+def display_all_products
   print "Order by? "
   order_choice = gets.chomp
   order_choice = nil if order_choice == ""
@@ -53,7 +56,7 @@ def display
   end
 end
 
-def create
+def create_a_product
   inputs = {}
   puts "What is the name of the product?"
   inputs["name"] = gets.chomp
@@ -71,14 +74,14 @@ def create
   puts humanized_product(response.body)
 end
 
-def read
+def read_a_product
   puts "Which ID would you like to see?"
   id = gets.chomp
   response = Unirest.get("#{base_url}/products/#{id}")
   puts humanized_product(response.body)
 end
 
-def update
+def update_a_product
   puts "which ID would you like to update?"
   id = gets.chomp
   inputs = {}
@@ -100,14 +103,14 @@ def update
   puts humanized_product(response.body)
 end
 
-def destroy
+def destroy_a_product
   puts "which ID would you like to destroy?"
   id = gets.chomp
   response = Unirest.delete("#{base_url}/v3/products/#{id}")
   puts response.code == 200 ? "Success!" : "No luck"
 end
 
-def restock
+def restock_all_products
   response = Unirest.get("#{base_url}/products")
   products = response.body
   products.each do |x|
@@ -126,7 +129,7 @@ def run
     puts "Welcome to the pokemart"
     puts "What would you like to do?"
     menu_options.each do |choice|
-      puts "[#{menu_options.index(choice) + 1}] #{choice.name.capitalize}"
+      puts "[#{menu_options.index(choice) + 1}] #{humanized_method_name(choice)}"
     end
     puts "Input anything else to quit"
     option = gets.chomp.to_i

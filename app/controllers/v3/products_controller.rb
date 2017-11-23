@@ -1,6 +1,6 @@
 class V3::ProductsController < ApplicationController
   def index
-    product = Product.all.order(:id)
+    product = Product.all.order(params[:order] || :id)
     if params[:search]
       product = product.where("name ilike ?", "%#{params[:search]}%")
     end

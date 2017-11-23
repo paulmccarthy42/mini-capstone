@@ -19,12 +19,13 @@ def menu_options
 end
 
 def humanized_product(product)
-  """
-  #{product["id"]}. #{product["name"]}
-  #{product["description"].capitalize}
-  #{product["product_type"].capitalize} 
-  Cost: #{product["price"]}
-  #{product["stock"] > 0 ? "In stock" : "Not in stock"}"""
+  """#{product["id"]}. #{product["name"]}
+#{product["description"].capitalize}
+#{product["product_type"].capitalize} 
+Cost: #{product["price"]}
+#{product["stock"] > 0 ? "In stock" : "Not in stock"}
+
+"""
 end
 
 #Special functions
@@ -67,14 +68,14 @@ def create
   puts "What is the stock of the product?"
   inputs["stock"] = gets.chomp.to_i
   response = Unirest.post("#{base_url}/products", parameters: inputs)
-  pp response.body
+  puts humanized_product(response.body)
 end
 
 def read
   puts "Which ID would you like to see?"
   id = gets.chomp
   response = Unirest.get("#{base_url}/products/#{id}")
-  pp response.body
+  puts humanized_product(response.body)
 end
 
 def update
@@ -96,7 +97,7 @@ def update
 
   response = Unirest.patch("#{base_url}/products/#{id}", 
      parameters: params)
-  pp response.body
+  puts humanized_product(response.body)
 end
 
 def destroy
@@ -115,7 +116,7 @@ def restock
   end
   response = Unirest.get("#{base_url}/products")
   products = response.body
-  pp products.sort_by {|x| x["id"]}
+  products.each {|x| puts humanized_product(x)}
 end
 
 #Core engine for the app

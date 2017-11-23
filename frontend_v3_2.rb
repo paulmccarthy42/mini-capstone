@@ -13,10 +13,18 @@ def menu_options
   method(:read),
   method(:update),
   method(:destroy),
-  method(:restock)
+  method(:restock),
+  method(:search)
   ]
 end
 
+def search
+  print "What would you like to see in the name? "
+  search_choice = gets.chomp
+  response = Unirest.get("#{base_url}/products", parameters: {search: search_choice})
+  products = response.body
+  products.each {|x| pp x}
+end
 
 
 #CRUD Methods +

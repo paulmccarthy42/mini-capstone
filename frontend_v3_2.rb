@@ -29,7 +29,11 @@ end
 
 #CRUD Methods +
 def display
-  response = Unirest.get("#{base_url}/products")
+  print "Order by? "
+  order_choice = gets.chomp
+  order_choice = nil if order_choice == ""
+  response = Unirest.get("#{base_url}/products",
+    parameters: {order: order_choice})
   products = response.body
   products.each {|x| pp x}
 end

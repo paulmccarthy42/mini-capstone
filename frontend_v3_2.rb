@@ -18,13 +18,22 @@ def menu_options
   ]
 end
 
+def humanized_product(product)
+  """
+  #{product["id"]}. #{product["name"]}
+  #{product["description"].capitalize}
+  #{product["product_type"].capitalize} 
+  Cost: #{product["price"]}
+  #{product["stock"] > 0 ? "In stock" : "Not in stock"}"""
+end
+
 #Special functions
 def search
   print "What would you like to see in the name? "
   search_choice = gets.chomp
   response = Unirest.get("#{base_url}/products", parameters: {search: search_choice})
   products = response.body
-  products.each {|x| pp x}
+  products.each {|x| puts humanized_product(x)}
 end
 
 
@@ -35,8 +44,12 @@ def display
   order_choice = nil if order_choice == ""
   response = Unirest.get("#{base_url}/products",
     parameters: {order: order_choice})
-  products = response.body
-  products.each {|x| pp x}
+  if response.body == 200
+    products = response.body
+    products.each {|x| puts humanized_product(x)}
+  else
+    puts "Sorry, I don't think that's a valid column name"
+  end
 end
 
 def create

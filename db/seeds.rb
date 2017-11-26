@@ -40,3 +40,9 @@ supplier = Supplier.new(
   email: "silph@email.com",
   phone_number: "1111111111")
 supplier.save
+
+supplier = Supplier.new(
+  name: "Devon",
+  email: "devon@email.com",
+  phone_number: "1234567890")
+supplier.save

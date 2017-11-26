@@ -12,6 +12,10 @@ class Product < ApplicationRecord
     Supplier.find_by(id: self.supplier_id)
   end
 
+  def images
+    Image.where(product_id: id)
+  end
+
   def is_discounted?
     price.to_i < 300 ? true : false
   end
@@ -31,7 +35,6 @@ class Product < ApplicationRecord
       price: price,
       tax: tax,
       total: total,
-      image: image,
       product_type: product_type,
       description: description,
       stock: stock,

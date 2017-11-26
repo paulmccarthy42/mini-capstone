@@ -8,6 +8,10 @@ class Product < ApplicationRecord
   validates :price, numericality: {only_integer: true}
   validates :price, numericality: {greater_than: 0}
 
+  def supplier
+    Supplier.find_by(id: self.supplier_id)
+  end
+
   def is_discounted?
     price.to_i < 300 ? true : false
   end

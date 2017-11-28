@@ -1,5 +1,12 @@
 class Image < ApplicationRecord
-  def product
-    Product.find_by(id: product_id)
+  belongs_to :product
+
+  def as_json
+    {
+      id: id,
+      product_id: product_id,
+      product: product.name,
+      url: url
+    }
   end
 end

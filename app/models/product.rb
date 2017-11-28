@@ -8,13 +8,8 @@ class Product < ApplicationRecord
   validates :price, numericality: {only_integer: true}
   validates :price, numericality: {greater_than: 0}
 
-  def supplier
-    Supplier.find_by(id: self.supplier_id)
-  end
-
-  def images
-    Image.where(product_id: id)
-  end
+  belongs_to :supplier
+  has_many :images
 
   def is_discounted?
     price.to_i < 300 ? true : false
@@ -39,6 +34,7 @@ class Product < ApplicationRecord
       description: description,
       stock: stock,
       is_discounted?: is_discounted?,
+      images: images.as_json,
       created_at: created_at,
       updated_at: updated_at
     }

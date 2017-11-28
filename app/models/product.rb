@@ -1,7 +1,4 @@
 class Product < ApplicationRecord
-  # Name - presence - uniqueness
-  # Price - presence - numericality
-  # Description - length of a minimum of 200 and a maximum of 500 characters
   validates :name, :price, presence: true
   validates :name, uniqueness: true
   validates :description, length: {in: 5..500}

@@ -13,7 +13,7 @@ def menu_options
   method(:destroy_a_product),
   method(:restock_all_products),
   method(:search_for_a_product),
-  method(:create_a_user)
+  method(:logout)
   ]
 end
 
@@ -123,6 +123,7 @@ def restock_all_products
   products.each {|x| puts humanized_product(x)}
 end
 
+#user functions
 def create_a_user
   params = {}
   puts "What is your user's name?"
@@ -140,8 +141,47 @@ def create_a_user
 end
 
 def login
+  jwt = nil
+  while jwt == nil
+    system 'clear'
+    params = {}
+    print "Email: "
+    params[:email] = gets.chomp
+    print "Password: "
+    params[:password] = gets.chomp
+    response = Unirest.post("http://localhost:3000/user_token",
+      parameters: {auth: params})
+    jwt = response.body["jwt"]
+    if jwt == nil
+      puts "No luck, try again"
+    else
+      puts "Success"
+      Unirest.default_header("Authorization", "Bearer #{jwt}")
+    end
+    gets.chomp
+  end
+end
+
+def logout
+  Unirest.clear_default_headers()
+  puts "Goodbye :)"
+  exit
+end
+
+def startup
   puts "Welcome to the pokemart"
-  gets.chomp
+  puts "[1] sign up"
+  puts "[2] log in"
+  choice = gets.chomp.to_i
+  if choice == 1
+    create_a_user
+    true
+  elsif choice == 2
+    login
+    true
+  else
+    false
+  end
 end
 
 #Core engine for the app
@@ -152,10 +192,9 @@ def run
     menu_options.each do |choice|
       puts "[#{menu_options.index(choice) + 1}] #{humanized_method_name(choice)}"
     end
-    puts "Input anything else to quit"
     option = gets.chomp.to_i
     if option > menu_options.length || option == 0
-      break
+      puts "Invalid selection, try again"
     else
       menu_options[option - 1].call
     end
@@ -164,6 +203,6 @@ def run
 end
 
 #tester
-if login
+if startup
   run
 end

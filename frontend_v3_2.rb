@@ -139,11 +139,15 @@ def create_a_user
   puts response.body
 end
 
+def login
+  puts "Welcome to the pokemart"
+  gets.chomp
+end
+
 #Core engine for the app
 def run
   while true
     system "clear"
-    puts "Welcome to the pokemart"
     puts "What would you like to do?"
     menu_options.each do |choice|
       puts "[#{menu_options.index(choice) + 1}] #{humanized_method_name(choice)}"
@@ -160,4 +164,6 @@ def run
 end
 
 #tester
-run
+if login
+  run
+end

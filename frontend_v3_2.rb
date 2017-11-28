@@ -12,7 +12,8 @@ def menu_options
   method(:update_a_product),
   method(:destroy_a_product),
   method(:restock_all_products),
-  method(:search_for_a_product)
+  method(:search_for_a_product),
+  method(:create_a_user)
   ]
 end
 
@@ -120,6 +121,22 @@ def restock_all_products
   response = Unirest.get("#{base_url}/products")
   products = response.body
   products.each {|x| puts humanized_product(x)}
+end
+
+def create_a_user
+  params = {}
+  puts "What is your user's name?"
+  params["name"] = gets.chomp
+  puts "What is your user's email?"
+  params["email"] = gets.chomp
+  puts "What is your user's access level?"
+  params["access_level"] = gets.chomp
+  puts "Please enter a password"
+  params["password"] = gets.chomp
+  puts "Please confirm your password"
+  params["password_confirmation"] = gets.chomp
+  response = Unirest.post("#{base_url}/users", parameters: params)
+  puts response.body
 end
 
 #Core engine for the app

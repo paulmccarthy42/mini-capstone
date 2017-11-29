@@ -130,23 +130,20 @@ end
 
 def login
   jwt = nil
-  while jwt == nil
-    system 'clear'
-    params = {}
-    print "Email: "
-    params[:email] = gets.chomp
-    print "Password: "
-    params[:password] = gets.chomp
-    response = Unirest.post("http://localhost:3000/user_token",
-      parameters: {auth: params})
-    jwt = response.body["jwt"]
-    if jwt == nil
-      puts "No luck, try again"
-    else
-      puts "Success"
-      Unirest.default_header("Authorization", "Bearer #{jwt}")
-    end
-    gets.chomp
+  system 'clear'
+  params = {}
+  print "Email: "
+  params[:email] = gets.chomp
+  print "Password: "
+  params[:password] = gets.chomp
+  response = Unirest.post("http://localhost:3000/user_token",
+    parameters: {auth: params})
+  jwt = response.body["jwt"]
+  if jwt == nil
+    puts "No luck, try again"
+  else
+    puts "Success"
+    Unirest.default_header("Authorization", "Bearer #{jwt}")
   end
 end
 
@@ -154,19 +151,6 @@ def logout
   Unirest.clear_default_headers()
   puts "Goodbye :)"
   exit
-end
-
-def order_a_product
-  puts "You're buying pokeballs. Deal with it"
-  params = {}
-  params["product_id"] = 1
-  puts "How many do you want to buy?"
-  params["quantity"] = gets.chomp.to_i
-  post_response = Unirest.post("http://localhost:3000/orders",
-    parameters: params)
-  puts params["quantity"] 
-  response = Unirest.get("http://localhost:3000/orders")
-  p response.body
 end
 
 def main_menu_options
@@ -177,7 +161,6 @@ def main_menu_options
   method(:destroy_a_product),
   method(:restock_all_products),
   method(:search_for_a_product),
-  method(:order_a_product),
   method(:logout)
   ]
 end
@@ -190,36 +173,31 @@ end
 
 def startup
   puts "Welcome to the pokemart"
-  puts "[1] sign up"
-  puts "[2] log in"
-  choice = gets.chomp.to_i
-  if choice == 1
-    create_a_user
-    true
-  elsif choice == 2
-    login
-    true
-  else
-    false
-  end
+  menu(startup_menu_options)
 end
 
 #Core engine for the app
-def run
+def menu(options)
   while true
     system "clear"
     puts "What would you like to do?"
-    main_menu_options.each do |choice|
-      puts "[#{main_menu_options.index(choice) + 1}] #{humanized_method_name(choice)}"
+    options.each do |choice|
+      puts "[#{options.index(choice) + 1}] #{humanized_method_name(choice)}"
     end
     option = gets.chomp.to_i
-    if option > main_menu_options.length || option == 0
+    if option > options.length || option == 0
       puts "Invalid selection, try again"
     else
-      main_menu_options[option - 1].call
+      options[option - 1].call
     end
+    response = Unirest.get("#{base_url}/products")
+    p response.headers
     gets.chomp
   end
+end
+
+def run
+  menu(main_menu_options)
 end
 
 #tester

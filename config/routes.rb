@@ -25,6 +25,8 @@ Rails.application.routes.draw do
     post "/users" => "users#create"
   end
 
+  post "/orders" => "orders#create"
+  get "/orders" => "orders#index"
   get "/suppliers" => "suppliers#index"
   post "/suppliers" => "suppliers#create"
   get "/suppliers/:id" => "suppliers#show"

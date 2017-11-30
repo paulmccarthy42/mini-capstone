@@ -3,13 +3,10 @@ require "unirest"
 class Frontend
   def initialize
     @jwt = nil
+    @base_url = "http://localhost:3000/v3"
   end
 
   #Basic variables
-  def base_url 
-    "http://localhost:3000/v3"
-  end
-
   def humanized_product(product)
     puts "#{product["id"]}. #{product["name"]}"
     puts "#{product["description"].capitalize}"
@@ -27,19 +24,24 @@ class Frontend
   def search_for_a_product
     print "What would you like to see in the name? "
     search_choice = gets.chomp
-    response = Unirest.get("#{base_url}/products", parameters: {search: search_choice})
+    response = Unirest.get("#{@base_url}/products", parameters: {search: search_choice})
     products = response.body
     products.each {|x| puts humanized_product(x)}
   end
 
-  #CRUD Methods +
+  #Product Methods +
   def display_all_products
+    response = Unirest.get("#{@base_url}/products")
+    response.body.each {|x| puts humanized_product(x)}
+  end
+
+  def search_all_products
     print "Order by? "
     order_choice = gets.chomp
     order_choice = nil if order_choice == ""
-    response = Unirest.get("#{base_url}/products",
+    response = Unirest.get("#{@base_url}/products",
       parameters: {order: order_choice})
-    if response.body == 200
+    if response.code == 200
       products = response.body
       products.each {|x| puts humanized_product(x)}
     else
@@ -61,14 +63,14 @@ class Frontend
     inputs["description"] = gets.chomp
     puts "What is the stock of the product?"
     inputs["stock"] = gets.chomp.to_i
-    response = Unirest.post("#{base_url}/products", parameters: inputs)
+    response = Unirest.post("#{@base_url}/products", parameters: inputs)
     puts humanized_product(response.body)
   end
 
   def read_a_product
     puts "Which ID would you like to see?"
     id = gets.chomp
-    response = Unirest.get("#{base_url}/products/#{id}")
+    response = Unirest.get("#{@base_url}/products/#{id}")
     puts humanized_product(response.body)
   end
 
@@ -78,7 +80,7 @@ class Frontend
     inputs = {}
 
     puts "What would you like to update?"
-    response = Unirest.get("#{base_url}/products/#{id}")
+    response = Unirest.get("#{@base_url}/products/#{id}")
     response.body.each do |key, value| 
       if !["id", "created_at", "updated_at"].include?(key) 
         puts "#{key.capitalize}: #{value}"
@@ -89,7 +91,7 @@ class Frontend
     updated_value = gets.chomp
     params = {updated_key => updated_value}
 
-    response = Unirest.patch("#{base_url}/products/#{id}", 
+    response = Unirest.patch("#{@base_url}/products/#{id}", 
        parameters: params)
     puts humanized_product(response.body)
   end
@@ -97,31 +99,38 @@ class Frontend
   def destroy_a_product
     puts "which ID would you like to destroy?"
     id = gets.chomp
-    response = Unirest.delete("#{base_url}/v3/products/#{id}")
+    response = Unirest.delete("#{@base_url}/v3/products/#{id}")
     puts response.code == 200 ? "Success!" : "No luck"
   end
 
   def restock_all_products
-    response = Unirest.get("#{base_url}/products")
+    response = Unirest.get("#{@base_url}/products")
     products = response.body
     products.each do |x|
-      response = Unirest.patch("#{base_url}/products/#{x["id"]}", 
+      response = Unirest.patch("#{@base_url}/products/#{x["id"]}", 
        parameters: {"stock" => 10})
     end
-    response = Unirest.get("#{base_url}/products")
+    response = Unirest.get("#{@base_url}/products")
     products = response.body
     products.each {|x| puts humanized_product(x)}
   end
 
+  #order methods
   def order_a_product
-    puts "You're buying pokeballs. Deal with it"
+    display_all_products
     params = {}
-    params["product_id"] = 1
+    print "What is the id of the product you want to buy?"
+    params["product_id"] = gets.chomp
     puts "How many do you want to buy?"
-    params["quantity"] = gets.chomp.to_i
+    params["quantity"] = gets.chomp
     post_response = Unirest.post("http://localhost:3000/orders",
       parameters: params)
+    puts post_response.body
+  end
+
+  def display_orders
     response = Unirest.get("http://localhost:3000/orders")
+    puts response.body
   end
 
   #user functions
@@ -137,7 +146,7 @@ class Frontend
     params["password"] = gets.chomp
     puts "Please confirm your password"
     params["password_confirmation"] = gets.chomp
-    response = Unirest.post("#{base_url}/users", parameters: params)
+    response = Unirest.post("#{@base_url}/users", parameters: params)
     puts response.body
     authenticate(params)
   end
@@ -152,6 +161,12 @@ class Frontend
     authenticate(params)
   end
 
+  def logout
+    Unirest.clear_default_headers()
+    puts "Goodbye :)"
+    @jwt == nil ? exit : @jwt = nil
+  end
+
   def authenticate(credentials)
     response = Unirest.post("http://localhost:3000/user_token",
       parameters: {auth: credentials})
@@ -164,12 +179,7 @@ class Frontend
     end
   end
 
-  def logout
-    Unirest.clear_default_headers()
-    puts "Goodbye :)"
-    @jwt == nil ? exit : @jwt = nil
-  end
-
+  #menu choices
   def main_menu_options
     [method(:display_all_products),
     method(:create_a_product),
@@ -179,6 +189,7 @@ class Frontend
     method(:restock_all_products),
     method(:search_for_a_product),
     method(:order_a_product),
+    method(:display_orders),
     method(:logout)
     ]
   end
@@ -189,7 +200,6 @@ class Frontend
     method(:logout)]
   end
 
-  #Core engine for the app
   def menu(options)
     system "clear"
     puts "What would you like to do?"
@@ -205,6 +215,7 @@ class Frontend
     gets.chomp
   end
 
+  #Core engine for the app
   def run
     while @jwt == nil
       "Welcome to the pokemart"
@@ -218,3 +229,5 @@ end
 
 frontend = Frontend.new
 frontend.run
+
+#TODO: Orders suck

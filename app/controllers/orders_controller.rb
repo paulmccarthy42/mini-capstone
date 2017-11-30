@@ -7,6 +7,7 @@ class OrdersController < ApplicationController
   end
 
   def create
+    params["product_id"] = params["product_id"].to_i
     product = Product.find_by(id: params["product_id"])
     subtotal = params["quantity"].to_i * product.price.to_i
     p subtotal

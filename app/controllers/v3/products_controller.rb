@@ -1,4 +1,7 @@
 class V3::ProductsController < ApplicationController
+  before_action :authenticate_user
+  before_action :authenticate_admin, except: [:index, :show]
+
   def index
     product = Product.all.order(params[:order] || :id)
     if params[:search]
@@ -10,7 +13,6 @@ class V3::ProductsController < ApplicationController
   def create
     product = Product.new(name: params["name"], 
       price: params["price"], 
-      image: params["image"],
       product_type: params["product_type"],
       description: params["description"],
       stock: params["stock"])
@@ -40,8 +42,9 @@ class V3::ProductsController < ApplicationController
       render json: product.as_json
     else
       render json: {errors: product.errors.full_messages}, status: :bad_request
-    end
+    end      
   end
+
 
   def destroy
     id = params["id"]

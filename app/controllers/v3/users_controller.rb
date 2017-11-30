@@ -3,7 +3,6 @@ class V3::UsersController < ApplicationController
     user = User.new(
       name: params[:name],
       email: params[:email],
-      access_level: params[:access_level],
       password: params[:password],
       password_confirmation: params[:password_confirmation]
     )

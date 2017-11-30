@@ -1,4 +1,5 @@
 require "unirest"
+require "pp"
 
 #Basic variables
 def base_url 
@@ -51,8 +52,6 @@ def create_a_product
   inputs["name"] = gets.chomp
   puts "What is the price of the product?"
   inputs["price"] = gets.chomp.to_i
-  puts "What is the image of the product?"
-  inputs["image"] = gets.chomp
   puts "What is the type of the product?"
   inputs["product_type"] = gets.chomp
   puts "What is the description of the product?"
@@ -60,7 +59,11 @@ def create_a_product
   puts "What is the stock of the product?"
   inputs["stock"] = gets.chomp.to_i
   response = Unirest.post("#{base_url}/products", parameters: inputs)
-  puts humanized_product(response.body)
+  if response.code == 401
+    puts "No luck, non admin user"
+  else
+    p humanized_product(response.body)
+  end
 end
 
 def read_a_product
@@ -118,8 +121,6 @@ def create_a_user
   params["name"] = gets.chomp
   puts "What is your user's email?"
   params["email"] = gets.chomp
-  puts "What is your user's access level?"
-  params["access_level"] = gets.chomp
   puts "Please enter a password"
   params["password"] = gets.chomp
   puts "Please confirm your password"
@@ -140,6 +141,7 @@ def login
     response = Unirest.post("http://localhost:3000/user_token",
       parameters: {auth: params})
     jwt = response.body["jwt"]
+    p jwt
     if jwt == nil
       puts "No luck, try again"
     else
@@ -164,9 +166,9 @@ def order_a_product
   params["quantity"] = gets.chomp.to_i
   post_response = Unirest.post("http://localhost:3000/orders",
     parameters: params)
-  puts params["quantity"] 
   response = Unirest.get("http://localhost:3000/orders")
-  p response.body
+  pp response.body
+  pp response.headers
 end
 
 def main_menu_options
@@ -183,7 +185,8 @@ def main_menu_options
 end
 
 def startup_menu_options
-  [method(:login),
+  [method(:display_all_products),
+  method(:login),
   method(:create_a_user),
   method(:logout)]
 end
@@ -198,6 +201,7 @@ def startup
     true
   elsif choice == 2
     login
+    p current_user
     true
   else
     false

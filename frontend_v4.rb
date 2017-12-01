@@ -179,9 +179,16 @@ class Frontend
     end
   end
 
+  def view_categories
+    response = Unirest.get("#{@base_url}/categories")
+    categories = response.body
+    categories.map {|x| puts "#{x["id"]}. #{x["name"]}"}
+  end
+
   #menu choices
   def main_menu_options
-    [method(:display_all_products),
+    [method(:view_categories),
+    method(:display_all_products),
     method(:create_a_product),
     method(:read_a_product),
     method(:update_a_product),

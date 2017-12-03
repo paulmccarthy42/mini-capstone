@@ -10,7 +10,6 @@ class Frontend
   def humanized_product(product)
     puts "#{product["id"]}. #{product["name"]}"
     puts "#{product["description"].capitalize}"
-    puts "#{product["product_type"].capitalize}" 
     puts "Cost: #{product["price"]}"
     puts "#{product["stock"] > 0 ? "In stock" : "Not in stock"}"
   end
@@ -133,6 +132,37 @@ class Frontend
     puts response.body
   end
 
+  def add_product_to_cart
+    display_all_products
+    params = {}
+    puts "What would you like to buy (select by id)?"
+    params[:product_id] = gets.chomp
+    puts "How many?"
+    params[:quantity] = gets.chomp
+    response = Unirest.post("#{@base_url}/carted_products",
+      parameters: params)
+    p response.body
+  end
+
+  def view_shopping_cart
+    response = Unirest.get("#{@base_url}/carted_products")
+    puts response.body
+  end
+
+  def buy_shopping_cart
+    response = Unirest.post("http://localhost:3000/orders")
+    puts response.body
+  end
+
+  def remove_item_from_shopping_cart
+    view_shopping_cart
+    puts "What purchase do you want to remove?"
+    purchase_id = gets.chomp
+    response = Unirest.delete("#{@base_url}/carted_products/#{purchase_id}")
+    puts response.body
+
+  end
+
   #user functions
   def create_a_user
     params = {}
@@ -140,8 +170,6 @@ class Frontend
     params["name"] = gets.chomp
     puts "What is your user's email?"
     params["email"] = gets.chomp
-    puts "What is your user's access level?"
-    params["access_level"] = gets.chomp
     puts "Please enter a password"
     params["password"] = gets.chomp
     puts "Please confirm your password"
@@ -195,8 +223,10 @@ class Frontend
     method(:destroy_a_product),
     method(:restock_all_products),
     method(:search_for_a_product),
-    method(:order_a_product),
-    method(:display_orders),
+    method(:add_product_to_cart),
+    method(:view_shopping_cart),
+    method(:remove_item_from_shopping_cart),
+    method(:buy_shopping_cart),
     method(:logout)
     ]
   end
@@ -238,3 +268,4 @@ frontend = Frontend.new
 frontend.run
 
 #TODO: Orders suck
+

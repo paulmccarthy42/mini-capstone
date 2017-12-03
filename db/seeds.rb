@@ -2,7 +2,6 @@
 product = Product.new(
   name: "Pokeball", 
   price: "200", 
-  product_type: "pokeball",
   description: "catches low level pokemon",
   stock: 10,
   supplier_id: 1)
@@ -15,7 +14,6 @@ image.save
 product = Product.new(
   name: "Great Ball", 
   price: "500", 
-  product_type: "pokeball",
   description: "catches mid level pokemon",
   stock: 10,
   supplier_id: 1)
@@ -29,7 +27,6 @@ image.save
 product = Product.new(
   name: "Ultra Ball", 
   price: "1000", 
-  product_type: "pokeball",
   description: "catches high level pokemon",
   stock: 10,
   supplier_id: 1)

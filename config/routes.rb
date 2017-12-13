@@ -22,8 +22,11 @@ Rails.application.routes.draw do
     get "/products/:id" => "products#show"
     patch "/products/:id" => "products#update"
     delete "/products/:id" => "products#destroy"
+    
     post "/users" => "users#create"
+    
     get "/categories" => "categories#index"
+    
     get "/carted_products" => "carted_products#index"
     post "/carted_products" => "carted_products#create"
     delete "/carted_products/:id" => "carted_products#destroy"
@@ -31,6 +34,7 @@ Rails.application.routes.draw do
 
   post "/orders" => "orders#create"
   get "/orders" => "orders#index"
+  
   get "/suppliers" => "suppliers#index"
   post "/suppliers" => "suppliers#create"
   get "/suppliers/:id" => "suppliers#show"

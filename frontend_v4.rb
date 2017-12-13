@@ -7,11 +7,10 @@ class Frontend
   end
 
   #Basic variables
-  def humanized_product(product)
-    puts "#{product["id"]}. #{product["name"]}"
-    puts "#{product["description"].capitalize}"
-    puts "Cost: #{product["price"]}"
-    puts "#{product["stock"] > 0 ? "In stock" : "Not in stock"}"
+  def humanized_hash(hash)
+    hash.each do |key, value|
+      puts "#{key}: #{value}"
+    end
   end
 
   def humanized_method_name(method)
@@ -25,13 +24,13 @@ class Frontend
     search_choice = gets.chomp
     response = Unirest.get("#{@base_url}/products", parameters: {search: search_choice})
     products = response.body
-    products.each {|x| puts humanized_product(x)}
+    products.each {|x| puts humanized_hash(x)}
   end
 
   #Product Methods +
   def display_all_products
     response = Unirest.get("#{@base_url}/products")
-    response.body.each {|x| puts humanized_product(x)}
+    response.body.each {|x| puts humanized_hash(x)}
   end
 
   def search_all_products
@@ -42,7 +41,7 @@ class Frontend
       parameters: {order: order_choice})
     if response.code == 200
       products = response.body
-      products.each {|x| puts humanized_product(x)}
+      products.each {|x| puts humanized_hash(x)}
     else
       puts "Sorry, I don't think that's a valid column name"
     end
@@ -63,14 +62,14 @@ class Frontend
     puts "What is the stock of the product?"
     inputs["stock"] = gets.chomp.to_i
     response = Unirest.post("#{@base_url}/products", parameters: inputs)
-    puts humanized_product(response.body)
+    puts humanized_hash(response.body)
   end
 
   def read_a_product
     puts "Which ID would you like to see?"
     id = gets.chomp
     response = Unirest.get("#{@base_url}/products/#{id}")
-    puts humanized_product(response.body)
+    puts humanized_hash(response.body)
   end
 
   def update_a_product
@@ -92,7 +91,7 @@ class Frontend
 
     response = Unirest.patch("#{@base_url}/products/#{id}", 
        parameters: params)
-    puts humanized_product(response.body)
+    puts humanized_hash(response.body)
   end
 
   def destroy_a_product
@@ -111,7 +110,7 @@ class Frontend
     end
     response = Unirest.get("#{@base_url}/products")
     products = response.body
-    products.each {|x| puts humanized_product(x)}
+    products.each {|x| puts humanized_hash(x)}
   end
 
   #order methods
@@ -267,5 +266,7 @@ end
 frontend = Frontend.new
 frontend.run
 
-#TODO: Orders suck
+#TODO: Cleanup display and as_json for carted_products
+# issues with failed carted_product save in create order, where you create order but don't empty shopping cart
+
 

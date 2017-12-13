@@ -7,7 +7,7 @@ class OrdersController < ApplicationController
   end
 
   def create
-    carted_products = CartedProduct.where(user_id: current_user.id).where(status: "carted")
+    carted_products = current_user.carted_products.where(status: "carted")
     subtotal = 0
     carted_products.each do |cart_item|
       subtotal += cart_item.quantity * cart_item.product.price

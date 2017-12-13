@@ -1,0 +1,26 @@
+.container {
+  font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
+  color: orange;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.dropdown {
+  color: black;
+  text-shadow: none;
+}
+
+button {
+  background-color: orange;
+  border-color: black;
+}
+
+h1 {
+  text-align: center;
+}
+
+body {
+  background-image: url('background.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  /*background-blend-mode: overlay;*/
+}

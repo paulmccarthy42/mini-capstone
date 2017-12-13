@@ -1,4 +1,6 @@
 class V3::CartedProductsController < ApplicationController
+  before_action :authenticate_user
+
   def create
     carted_product = CartedProduct.new(
       user_id: current_user.id,
@@ -15,8 +17,7 @@ class V3::CartedProductsController < ApplicationController
   end
 
   def index
-    shopping_cart = CartedProduct.all
-    shopping_cart = shopping_cart.where(user_id: current_user.id)
+    shopping_cart = current_user.carted_products #can use user.carted_products relationship instead
     shopping_cart = shopping_cart.where(status: "carted")
     render json: shopping_cart
   end
